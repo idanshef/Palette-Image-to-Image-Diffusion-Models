@@ -155,15 +155,20 @@ class ColorizationDataset(data.Dataset):
                 transforms.ToTensor(),
                 transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5,0.5, 0.5])
         ])
-        self.loader = loader
+        # self.loader = loader
         self.image_size = image_size
 
     def __getitem__(self, index):
         ret = {}
-        file_name = str(self.flist[index]).zfill(5) + '.png'
+        file_path = self.flist[index]
+        file_name = os.path.split(file_path)[-1]
+        # file_name = str(self.flist[index]).zfill(5) + '.png'
 
-        img = self.tfs(self.loader('{}/{}/{}'.format(self.data_root, 'color', file_name)))
-        cond_image = self.tfs(self.loader('{}/{}/{}'.format(self.data_root, 'gray', file_name)))
+        pil_im = Image.open(file_path)
+        img = self.tfs(pil_im)
+        cond_image = self.tfs(pil_im.convert("L").convert("RGB"))
+        # img = self.tfs(self.loader('{}/{}/{}'.format(self.data_root, 'color', file_name)))
+        # cond_image = self.tfs(self.loader('{}/{}/{}'.format(self.data_root, 'gray', file_name)))
 
         ret['gt_image'] = img
         ret['cond_image'] = cond_image

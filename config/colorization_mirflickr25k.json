@@ -1,7 +1,7 @@
 {
     "name": "colorization_mirflickr25k", // experiments name
     "gpu_ids": [0], // gpu ids list, default is single 0
-    "seed" : -1, // random seed, seed <0 represents randomization not used 
+    "seed" : 1, // random seed, seed <0 represents randomization not used 
     "finetune_norm": false, // find the parameters to optimize
 
     "path": { //set every part file path
@@ -19,23 +19,24 @@
             "which_dataset": {  // import designated dataset using arguments 
                 "name": ["data.dataset", "ColorizationDataset"], // import Dataset() class / function(not recommend) from data.dataset.py (default is [data.dataset.py])
                 "args":{ // arguments to initialize dataset
-                    "data_root": "datasets/mirflickr25k/images",
-                    "data_flist": "datasets/mirflickr25k/flist/train.flist",
+                    "data_root": "/home/isheffer/data/coco/train2017",
+                    "data_flist": "/home/isheffer/data/coco/train2017",
+                    "image_size": [64, 64],
                     "data_len": -1
                 } 
             },
             "dataloader":{
                 "validation_split": 2, // percent or number 
                 "args":{ // arguments to initialize train_dataloader
-                    "batch_size": 4, // batch size in each gpu
-                    "num_workers": 4,
+                    "batch_size": 128, // batch size in each gpu
+                    "num_workers": 16,
                     "shuffle": true,
                     "pin_memory": true,
                     "drop_last": true
                 },
                 "val_args":{ // arguments to initialize valid_dataloader, will overwrite the parameters in train_dataloader
-                    "batch_size": 1, // batch size in each gpu
-                    "num_workers": 4,
+                    "batch_size": 128, // batch size in each gpu
+                    "num_workers": 16,
                     "shuffle": false,
                     "pin_memory": true,
                     "drop_last": false
@@ -131,8 +132,8 @@
     "train": { // arguments for basic training
         "n_epoch": 1e8, // max epochs, not limited now
         "n_iter": 1e8, // max interations
-        "val_epoch": 5, // valdation every specified number of epochs
-        "save_checkpoint_epoch": 10,
+        "val_epoch": 10, // valdation every specified number of epochs
+        "save_checkpoint_epoch": 500,
         "log_iter": 1e4, // log every specified number of iterations
         "tensorboard" : true // tensorboardX enable
     },
